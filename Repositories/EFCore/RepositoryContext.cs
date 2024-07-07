@@ -1,14 +1,20 @@
-﻿using Microsoft.EntityFrameworkCore;
-using WebAPI.Models;
-using WebAPI.Repositories.Config;
+﻿using Entities.Models;
+using Microsoft.EntityFrameworkCore;
+using Repositories.EFCore.Config;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection.Emit;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace WebAPI.Repositories
+namespace Repositories.EFCore
 {
     public class RepositoryContext : DbContext
     {
         public RepositoryContext(DbContextOptions options) : base(options)
         {
-            
+
         }
         public DbSet<Book> Books { get; set; }
 
@@ -17,4 +23,5 @@ namespace WebAPI.Repositories
             modelBuilder.ApplyConfiguration(new BookConfig());
         }
     }
+
 }
