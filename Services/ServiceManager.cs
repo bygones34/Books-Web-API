@@ -12,9 +12,9 @@ namespace Services
     {
 
         private readonly Lazy<IBookService> _bookService;
-        public ServiceManager(IRepositoryManager repositoryManager)
+        public ServiceManager(IRepositoryManager repositoryManager, ILoggerService logger)
         {
-            _bookService = new Lazy<IBookService>(() => new BookManager(repositoryManager)); // Lazy Loading
+            _bookService = new Lazy<IBookService>(() => new BookManager(repositoryManager, logger)); // Lazy Loading
         }
         public IBookService BookService => _bookService.Value;
     }
