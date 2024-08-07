@@ -56,9 +56,7 @@ namespace WebAPI.Extensions
         {
             services.Configure<MvcOptions>(config =>
             {
-                var systemTextJsonOutputFormatter = config
-                .OutputFormatters
-                .OfType<SystemTextJsonInputFormatter>()?.FirstOrDefault();
+                var systemTextJsonOutputFormatter = config.OutputFormatters.OfType<SystemTextJsonOutputFormatter>().FirstOrDefault();
 
                 if (systemTextJsonOutputFormatter != null)
                 {

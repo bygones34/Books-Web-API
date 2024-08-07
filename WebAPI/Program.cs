@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using NLog;
 using Presentation.ActionFilters;
 using Repositories.EFCore;
+using Services;
 using Services.Contracts;
 using WebAPI.Extensions;
 
@@ -12,15 +13,15 @@ LogManager.LoadConfiguration(String.Concat(Directory.GetCurrentDirectory(), "/nl
 
 // Add services to the container.
 
-builder.Services.AddControllers(config => 
+builder.Services.AddControllers(config =>
 {
     config.RespectBrowserAcceptHeader = true;
     config.ReturnHttpNotAcceptable = true;
 })
-    .AddCustomCsvFormatter() // CSV olarak output vermek için gereken Middleware
     .AddXmlDataContractSerializerFormatters() // XML olarak output vermek için gereken Middleware
-    .AddApplicationPart(typeof(Presentation.AssemblyReference).Assembly)
-    .AddNewtonsoftJson();
+    .AddCustomCsvFormatter() // CSV olarak output vermek için gereken Middleware
+    .AddApplicationPart(typeof(Presentation.AssemblyReference).Assembly);
+    //.AddNewtonsoftJson();
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
@@ -39,6 +40,7 @@ builder.Services.ConfigureActionFilters();
 builder.Services.ConfigureCors();
 builder.Services.ConfigureDataShaper();
 builder.Services.AddCustomMediaTypes();
+builder.Services.AddScoped<IBookLinks, BookLinks>();
 
 var app = builder.Build();
 
