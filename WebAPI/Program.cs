@@ -17,6 +17,7 @@ builder.Services.AddControllers(config =>
 {
     config.RespectBrowserAcceptHeader = true;
     config.ReturnHttpNotAcceptable = true;
+    config.CacheProfiles.Add("5mins", new CacheProfile() { Duration = 300});
 })
     .AddXmlDataContractSerializerFormatters() // XML olarak output vermek için gereken Middleware
     .AddCustomCsvFormatter() // CSV olarak output vermek için gereken Middleware
@@ -41,6 +42,9 @@ builder.Services.ConfigureCors();
 builder.Services.ConfigureDataShaper();
 builder.Services.AddCustomMediaTypes();
 builder.Services.AddScoped<IBookLinks, BookLinks>();
+builder.Services.ConfigureVersioning();
+builder.Services.ConfigureResponseCaching();
+builder.Services.ConfigureHttpCacheHeaders();
 
 var app = builder.Build();
 
@@ -62,6 +66,9 @@ if (app.Environment.IsProduction())
 app.UseHttpsRedirection();
 
 app.UseCors("CorsPolicy");
+
+app.UseResponseCaching(); // Microsoft Cors'dan sonra Caching ifadelerinin çaðýrýlmasýný öneriyor.
+app.UseHttpCacheHeaders();
 
 app.UseAuthorization();
 

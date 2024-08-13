@@ -2,6 +2,7 @@
 using Entities.Exceptions;
 using Entities.Models;
 using Entities.RequestFeatures;
+using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.ActionFilters;
@@ -10,9 +11,12 @@ using System.Text.Json;
 
 namespace Presentation.Controllers
 {
+    //[ApiVersion("1.0")]
     [ServiceFilter(typeof(LogFilterAttribute))]
     [ApiController]
     [Route("api/books")]
+    //[ResponseCache(CacheProfileName = "5mins")] // Expiration Cache Model
+    //[HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 80)]
     public class BooksController : ControllerBase
     {
         private readonly IServiceManager _manager;
