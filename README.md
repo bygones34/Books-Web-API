@@ -1,1 +1,1 @@
-Test .NET Core Web API Project. (A Books Database)
+A demo web API project based on .NET Core
