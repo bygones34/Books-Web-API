@@ -1,1 +1,1 @@
-A demo web API project based on .NET Core
+ASP.NET Core Web API project. (Books API)
