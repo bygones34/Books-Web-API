@@ -9,12 +9,14 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Presentation.ActionFilters;
 using Presentation.Controllers;
 using Repositories.Contracts;
 using Repositories.EFCore;
 using Services;
 using Services.Contracts;
+using System.Reflection;
 using System.Text;
 
 namespace WebAPI.Extensions
@@ -77,7 +79,7 @@ namespace WebAPI.Extensions
                     systemTextJsonOutputFormatter.SupportedMediaTypes
                     .Add("application/vnd.btkakademi.apiroot+json");
                 }
-                
+
                 var xmlOutputFormatter = config
                 .OutputFormatters
                 .OfType<XmlDataContractSerializerOutputFormatter>()?.FirstOrDefault();
@@ -90,7 +92,7 @@ namespace WebAPI.Extensions
             });
         }
 
-        public static void ConfigureVersioning (this IServiceCollection services)
+        public static void ConfigureVersioning(this IServiceCollection services)
         {
             services.AddApiVersioning(opt =>
             {
@@ -102,7 +104,7 @@ namespace WebAPI.Extensions
                     .HasApiVersion(new ApiVersion(1, 0)); // Convention Api Versioning. 
 
                 opt.Conventions.Controller<BooksV2Controller>()
-                    .HasDeprecatedApiVersion(new ApiVersion(2,0)); // Convention Api Versioning but deprecated.
+                    .HasDeprecatedApiVersion(new ApiVersion(2, 0)); // Convention Api Versioning but deprecated.
             });
         }
 
@@ -185,5 +187,51 @@ namespace WebAPI.Extensions
                 }
             );
         }
+
+        public static void ConfigureSwagger(this IServiceCollection services)
+        {
+            services.AddSwaggerGen(s =>
+            {
+                s.SwaggerDoc("v1", new OpenApiInfo 
+                { 
+                    Title = "Alper Books API v1",
+                    Version = "v1",
+                    Description = "Alper Books Web API",
+                    TermsOfService = new Uri("https://google.com.tr"),
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Alper Dursun",
+                        Email = "alperdursuun@gmail.com",
+                        Url = new Uri("https://github.com/bygones34")
+                    }
+                });
+                s.SwaggerDoc("v2", new OpenApiInfo { Title = "Alper Books API v2", Version = "v2" });
+                s.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Place to add JWT with Bearer",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+
+                s.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Name = "Bearer"
+                        },
+                        new List<string>()
+                    }
+                });
+            });
+        }
+
     }
 }
