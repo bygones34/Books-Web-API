@@ -18,12 +18,12 @@ builder.Services.AddControllers(config =>
 {
     config.RespectBrowserAcceptHeader = true;
     config.ReturnHttpNotAcceptable = true;
-    config.CacheProfiles.Add("5mins", new CacheProfile() { Duration = 300});
+    config.CacheProfiles.Add("5mins", new CacheProfile() { Duration = 300 });
 })
     .AddXmlDataContractSerializerFormatters() // XML olarak output vermek için gereken Middleware
     .AddCustomCsvFormatter() // CSV olarak output vermek için gereken Middleware
     .AddApplicationPart(typeof(Presentation.AssemblyReference).Assembly);
-    //.AddNewtonsoftJson();
+    //.AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
@@ -51,6 +51,9 @@ builder.Services.ConfigureRateLimitingOptions();
 builder.Services.AddHttpContextAccessor();
 builder.Services.ConfigureIdentity();
 builder.Services.ConfigureJwt(builder.Configuration);
+
+builder.Services.RegisterRepositories();
+builder.Services.RegisterServices();
 
 var app = builder.Build();
 
